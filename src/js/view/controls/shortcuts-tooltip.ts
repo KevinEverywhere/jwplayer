@@ -116,14 +116,18 @@ export default function (
     };
 
     const documentClickHandler = (e: Event) => {
-        const target = e.target as HTMLElement;
-        if (!/jw-shortcuts|jw-switch/.test(target.className)) {
+        const target: EventTarget | null = e.target;
+        if (target instanceof HTMLElement && !/jw-shortcuts|jw-switch/.test(target.className)) {
             close();
         }
     };
 
     const toggleClickHandler = (e: Event) => {
-        const toggle = e.currentTarget as HTMLElement;
+        if (!(e.currentTarget instanceof HTMLElement)) {
+            return;
+        }
+
+        const toggle: HTMLElement = e.currentTarget;
         const isChecked = toggle.getAttribute('aria-checked') !== 'true';
         toggle.setAttribute('aria-checked', isChecked.toString());
         model.set('enableShortcuts', isChecked);
